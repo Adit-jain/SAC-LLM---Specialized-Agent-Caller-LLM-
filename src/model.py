@@ -1,10 +1,7 @@
 from unsloth import FastLanguageModel
+from config import max_seq_length, dtype, load_in_4bit
 
 def get_original_model(model_name="unsloth/Meta-Llama-3.1-8B-Instruct"):
-    max_seq_length = 2048     # Unsloth auto supports RoPE Scaling internally!
-    dtype = None              # None for auto detection
-    load_in_4bit = False      # Use 4bit quantization to reduce memory usage. Can be False.
-
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name = model_name,  
         max_seq_length = max_seq_length,

@@ -25,3 +25,6 @@ def setup_wandb(project_name: str, run_name: str):
         print(f"WandB run initialized: Project - {project_name}, Run - {run_name}")
     except Exception as e:
         print(f"Error initializing WandB run: {e}")
+
+def end_wandb():
+    wandb.finish()
