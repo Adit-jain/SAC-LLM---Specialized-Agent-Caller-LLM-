@@ -1,0 +1,46 @@
+from datasets import load_from_disk
+from unsloth.chat_templates import get_chat_template
+
+def get_dataset(path=r"C:\Studies\Datasets\XLAM_60k"):
+    dataset = load_from_disk(path)
+    return dataset
+
+def update_tokenizer_with_template(tokenizer):
+    # Initialize the tokenizer with the chat template and mapping
+    tokenizer = get_chat_template(
+        tokenizer,
+        chat_template = "llama-3", 
+        mapping = {"role" : "from", "content" : "value", "user" : "human", "assistant" : "gpt"}, # ShareGPT style
+        map_eos_token = True,        # Maps <|im_end|> to <|eot_id|> instead
+    )
+
+    return tokenizer
+
+def map_dataset_to_template(dataset, tokenizer):
+
+    def formatting_prompts_func(examples):
+        convos = []
+        
+        # Iterate through each item in the batch (examples are structured as lists of values)
+        for query, tools, answers in zip(examples['query'], examples['tools'], examples['answers']):
+            tool_user = {
+                "content": f"You are a helpful assistant with access to the following tools or function calls. Your task is to produce a sequence of tools or function calls necessary to generate response to the user utterance. Use the following tools or function calls as required:\n{tools}",
+                "role": "system"
+            }
+            ques_user = {
+                "content": f"{query}",
+                "role": "user"
+            }
+            assistant = {
+                "content": f"{answers}",
+                "role": "assistant"
+            }
+            convos.append([tool_user, ques_user, assistant])
+
+        texts = [tokenizer.apply_chat_template(convo, tokenize=False, add_generation_prompt=False) for convo in convos]
+        return {"text": texts}
+
+    # Apply the formatting on dataset
+    dataset = dataset.map(formatting_prompts_func, batched = True,)
+
+    return dataset
