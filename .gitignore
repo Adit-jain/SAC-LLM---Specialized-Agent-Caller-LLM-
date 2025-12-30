@@ -209,3 +209,9 @@ __marimo__/
 # Unsloth Cache
 unsloth_compiled_cache/
 
+# Claude
+CLAUDE*
+
+# WandB
+wandb*
+

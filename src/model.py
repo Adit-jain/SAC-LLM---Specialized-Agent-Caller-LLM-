@@ -3,10 +3,11 @@ from config import max_seq_length, dtype, load_in_4bit
 
 def get_original_model(model_name="unsloth/Meta-Llama-3.1-8B-Instruct"):
     model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name = model_name,  
+        model_name = model_name,
         max_seq_length = max_seq_length,
         dtype = dtype,
         load_in_4bit = load_in_4bit,
+        device_map = {"": 0},  # Force all weights to GPU 0
     )
 
     return model, tokenizer
