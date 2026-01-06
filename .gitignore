@@ -215,3 +215,5 @@ CLAUDE*
 # WandB
 wandb*
 
+# Outputs
+outputs*

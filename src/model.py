@@ -1,13 +1,13 @@
 from unsloth import FastLanguageModel
 from config import max_seq_length, dtype, load_in_4bit
 
-def get_original_model(model_name="unsloth/Meta-Llama-3.1-8B-Instruct"):
+def get_original_model(model_name="unsloth/Llama-3.2-3B-Instruct"):
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name = model_name,
         max_seq_length = max_seq_length,
         dtype = dtype,
         load_in_4bit = load_in_4bit,
-        device_map = {"": 0},  # Force all weights to GPU 0
+        # device_map = {"": 0},  # Force all weights to GPU 0
     )
 
     return model, tokenizer
@@ -29,7 +29,7 @@ def get_lora_model(model):
 
     return model
 
-def get_model(model_name="unsloth/Meta-Llama-3.1-8B-Instruct"):
+def get_model(model_name="unsloth/Llama-3.2-3B-Instruct"):
     model, tokenizer = get_original_model(model_name)
     model = get_lora_model(model)
     return model, tokenizer

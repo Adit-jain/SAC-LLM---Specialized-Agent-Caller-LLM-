@@ -1,7 +1,10 @@
 from datasets import load_from_disk
 from unsloth.chat_templates import get_chat_template
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
-def get_dataset(path=r"C:\Studies\Datasets\XLAM_60k"):
+def get_dataset(path=rf"{os.getenv('DATASET_PATH')}"):
     dataset = load_from_disk(path)
     return dataset
 
@@ -9,7 +12,7 @@ def update_tokenizer_with_template(tokenizer):
     # Initialize the tokenizer with the chat template and mapping
     tokenizer = get_chat_template(
         tokenizer,
-        chat_template = "llama-3", 
+        chat_template = "llama-3.1",
         mapping = {"role" : "from", "content" : "value", "user" : "human", "assistant" : "gpt"}, # ShareGPT style
         map_eos_token = True,        # Maps <|im_end|> to <|eot_id|> instead
     )
